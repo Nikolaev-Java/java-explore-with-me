@@ -11,6 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -31,7 +32,8 @@ public class BaseClientService implements ClientService {
                 .exchange(((clientRequest, clientResponse) -> {
                     if (clientResponse.getStatusCode().value() != 200) {
                         return ResponseEntity.badRequest().body(new BufferedReader(
-                                new InputStreamReader(clientResponse.getBody())).lines().collect(Collectors.joining()));
+                                new InputStreamReader(clientResponse.getBody(), StandardCharsets.UTF_8))
+                                .lines().collect(Collectors.joining()));
                     } else {
                         return ResponseEntity.ok().build();
                     }

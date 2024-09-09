@@ -10,6 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public class CachedBodyHttpServletsRequest extends HttpServletRequestWrapper {
     private byte[] body;
@@ -28,6 +29,6 @@ public class CachedBodyHttpServletsRequest extends HttpServletRequestWrapper {
     @Override
     public BufferedReader getReader() throws IOException {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(this.body);
-        return new BufferedReader(new InputStreamReader(byteArrayInputStream));
+        return new BufferedReader(new InputStreamReader(byteArrayInputStream, StandardCharsets.UTF_8));
     }
 }
