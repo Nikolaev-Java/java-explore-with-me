@@ -21,8 +21,6 @@ public class LoggingFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         CachedBodyHttpServletsRequest httpServletRequest = new CachedBodyHttpServletsRequest(request);
         filterChain.doFilter(httpServletRequest, response);
-
-        // Создание записи лога
         StringBuilder requestBody = new StringBuilder();
         InputStream inputStream = httpServletRequest.getInputStream();
         if ("POST".equals(request.getMethod())) {
