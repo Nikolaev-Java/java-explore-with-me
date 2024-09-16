@@ -30,6 +30,9 @@ public class GeneralStatService implements StatService {
     public List<ResponseStatDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
         log.debug("Received request for statistics between {} and: {}. Unique ip: {}. For uris : {}",
                 start, end, unique, uris);
+        if (end.isBefore(start)) {
+            throw new IllegalArgumentException("End time must not be before start time.");
+        }
         List<ResponseStatDto> response;
         if (unique) {
             response = mappingStat.statToResponseStatDto(statRepository.findAllStatsByUriUniqIp(uris, start, end));
