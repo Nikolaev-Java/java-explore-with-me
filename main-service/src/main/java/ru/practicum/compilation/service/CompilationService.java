@@ -14,7 +14,7 @@ public interface CompilationService {
 
     CompilationDto create(NewCompilationDto compilationDto);
 
-    void delete(long compId);
+    void deleteById(long compId);
 
     CompilationDto update(long compId, UpdateCompilationDto compilationDto);
 }

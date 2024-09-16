@@ -9,7 +9,7 @@ import java.util.List;
 public interface CategoryMapper {
     CategoryDto toCategoryDto(Category category);
 
-    Category fromNewCategory(NewCategoryDto dto);
+    Category fromNewCategory(CategoryDto dto);
 
     List<CategoryDto> toCategoryDtoList(List<Category> categoryList);
 }

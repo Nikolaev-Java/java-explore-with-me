@@ -40,28 +40,28 @@ public class PrivateEventController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public EventFullDto create(@PathVariable long userId, @Valid @RequestBody NewEventDto dto) {
-        return service.privateCreate(userId, dto);
+        return service.privateCreateEvent(userId, dto);
     }
 
     @GetMapping("/{eventId}")
     public EventFullDto getByUserId(@PathVariable long userId, @PathVariable long eventId) {
-        return service.privateGetByUser(userId, eventId);
+        return service.privateGetEventByUserId(userId, eventId);
     }
 
     @PatchMapping("/{eventId}")
     public EventFullDto update(@PathVariable long userId, @PathVariable long eventId,
                                @Valid @RequestBody UpdateUserEventDto dto) {
-        return service.privateUpdate(userId, eventId, dto);
+        return service.privateUpdateEventById(userId, eventId, dto);
     }
 
     @GetMapping("/{eventId}/requests")
     public List<ParticipationRequestDto> getRequestsByEvent(@PathVariable long userId, @PathVariable long eventId) {
-        return service.privateGetRequestsByEvent(userId, eventId);
+        return service.privateGetRequestsByEventId(userId, eventId);
     }
 
     @PatchMapping("/{eventId}/requests")
     public EventRequestStatusUpdateResult updateRequestsByEvent(@PathVariable long userId, @PathVariable long eventId,
                                                                 @RequestBody EventRequestStatusUpdateRequest dto) {
-        return service.privateUpdateRequestsByEvent(userId, eventId, dto);
+        return service.privateUpdateRequestsByEventId(userId, eventId, dto);
     }
 }

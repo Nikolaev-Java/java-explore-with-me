@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.category.dto.CategoryDto;
-import ru.practicum.category.dto.NewCategoryDto;
 import ru.practicum.category.service.CategoryService;
 
 @RestController
@@ -23,18 +22,18 @@ public class AdminCategoryController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public CategoryDto create(@Valid @RequestBody NewCategoryDto categoryDto) {
+    public CategoryDto create(@Valid @RequestBody CategoryDto categoryDto) {
         return service.create(categoryDto);
     }
 
     @DeleteMapping("/{catId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long catId) {
-        service.delete(catId);
+        service.deleteById(catId);
     }
 
     @PatchMapping("/{catId}")
-    public CategoryDto update(@PathVariable long catId, @Valid @RequestBody NewCategoryDto dto) {
+    public CategoryDto update(@PathVariable long catId, @Valid @RequestBody CategoryDto dto) {
         return service.update(catId, dto);
     }
 }

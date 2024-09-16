@@ -28,7 +28,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceBase implements UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final UserMapper mapper;
     private final ParticipationRepository participationRepository;
@@ -48,7 +48,7 @@ public class UserServiceBase implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUserById(Long id) {
         log.debug("Received id user for delete: {}", id);
         repository.deleteById(id);
         log.debug("User deleted with id {}", id);
@@ -104,7 +104,7 @@ public class UserServiceBase implements UserService {
 
     @Override
     @Transactional
-    public ParticipationRequestDto cancelParticipation(long userId, long requestId) {
+    public ParticipationRequestDto cancelParticipationById(long userId, long requestId) {
         log.debug("Received request cancel participation for user: {}, request: {}", userId, requestId);
         Participation participation = participationRepository.findByIdAndUserId(requestId, userId)
                 .orElseThrow(() -> new NotFoundException("Participation not found"));

@@ -19,15 +19,15 @@ import java.util.List;
 public interface EventService {
     List<EventShortDto> privateGetAllUserEvents(long userId, PageRequest page);
 
-    EventFullDto privateCreate(long userId, NewEventDto dto);
+    EventFullDto privateCreateEvent(long userId, NewEventDto dto);
 
-    EventFullDto privateGetByUser(long userId, long eventId);
+    EventFullDto privateGetEventByUserId(long userId, long eventId);
 
-    EventFullDto privateUpdate(long userId, long eventId, UpdateUserEventDto dto);
+    EventFullDto privateUpdateEventById(long userId, long eventId, UpdateUserEventDto dto);
 
-    List<ParticipationRequestDto> privateGetRequestsByEvent(long userId, long eventId);
+    List<ParticipationRequestDto> privateGetRequestsByEventId(long userId, long eventId);
 
-    EventRequestStatusUpdateResult privateUpdateRequestsByEvent(long userId, long eventId, EventRequestStatusUpdateRequest dto);
+    EventRequestStatusUpdateResult privateUpdateRequestsByEventId(long userId, long eventId, EventRequestStatusUpdateRequest dto);
 
     List<EventFullDto> adminGetAllEvents(AdminEventsFilters filters, Pageable page);
 
@@ -35,5 +35,5 @@ public interface EventService {
 
     List<EventShortDto> publicGetAllEvents(PublicEventsFilters publicEventsFilters, PageRequest page, HttpServletRequest request);
 
-    EventFullDto publicGetEvent(long id, HttpServletRequest request);
+    EventFullDto publicGetEventById(long id, HttpServletRequest request);
 }

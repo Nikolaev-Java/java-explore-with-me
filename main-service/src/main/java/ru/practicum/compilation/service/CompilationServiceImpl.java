@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.compilation.Compilation;
 import ru.practicum.compilation.CompilationRepository;
 import ru.practicum.compilation.dto.CompilationDto;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CompilationServiceBase implements CompilationService {
+public class CompilationServiceImpl implements CompilationService {
     public static final String ERROR_NOT_FOUND_MSG = "Can't find compilation with id ";
     private final CompilationRepository repository;
     private final CompilationMapper mapper;
@@ -42,7 +43,7 @@ public class CompilationServiceBase implements CompilationService {
     @Override
     public CompilationDto getCompilationById(long compId) {
         log.debug("Received request getting compilation with id {}", compId);
-        Compilation compilation = getCompilation(compId);
+        Compilation compilation = findCompilationById(compId);
         log.debug("Found compilation: {}", compilation);
         return mapper.toCompilationDto(compilation);
     }
@@ -57,7 +58,7 @@ public class CompilationServiceBase implements CompilationService {
     }
 
     @Override
-    public void delete(long compId) {
+    public void deleteById(long compId) {
         log.debug("Received request deleting compilation with id {}", compId);
         if (!repository.existsById(compId)) {
             throw new NotFoundException(ERROR_NOT_FOUND_MSG + compId);
@@ -67,9 +68,10 @@ public class CompilationServiceBase implements CompilationService {
     }
 
     @Override
+    @Transactional
     public CompilationDto update(long compId, UpdateCompilationDto compilationDto) {
         log.debug("Received request updating compilation with id {}", compId);
-        Compilation compilationToUpdate = getCompilation(compId);
+        Compilation compilationToUpdate = findCompilationById(compId);
         if (compilationDto.getEvents() != null) {
             Set<Event> eventSet = compilationDto.getEvents().stream()
                     .map(integer -> Event.builder().id(integer).build())
@@ -85,7 +87,7 @@ public class CompilationServiceBase implements CompilationService {
         return mapper.toCompilationDto(saved);
     }
 
-    private Compilation getCompilation(long compId) {
+    private Compilation findCompilationById(long compId) {
         return repository.findById(compId)
                 .orElseThrow(() -> new NotFoundException(ERROR_NOT_FOUND_MSG + compId));
     }

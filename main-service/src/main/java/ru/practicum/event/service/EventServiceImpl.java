@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class EventServiceBase implements EventService {
+public class EventServiceImpl implements EventService {
     public static final String EVENT_NOT_FOUND_EXC = "Event not found with id ";
     public static final String APP = "ewm-main-service";
     private final EventRepository eventRepository;
@@ -70,7 +70,7 @@ public class EventServiceBase implements EventService {
     }
 
     @Override
-    public EventFullDto privateCreate(long userId, NewEventDto dto) {
+    public EventFullDto privateCreateEvent(long userId, NewEventDto dto) {
         log.debug("Received request for private create event. User id: {}", userId);
         Event event = mapper.fromNewEventDto(dto);
         Location saved = locationRepository.save(event.getLocation());
@@ -83,7 +83,7 @@ public class EventServiceBase implements EventService {
     }
 
     @Override
-    public EventFullDto privateGetByUser(long userId, long eventId) {
+    public EventFullDto privateGetEventByUserId(long userId, long eventId) {
         log.debug("Received request for private get event by user. User id: {}", userId);
         Event event = eventRepository.findByIdAndInitiatorId(eventId, userId).orElseThrow(
                 () -> new NotFoundException(EVENT_NOT_FOUND_EXC + eventId));
@@ -92,7 +92,8 @@ public class EventServiceBase implements EventService {
     }
 
     @Override
-    public EventFullDto privateUpdate(long userId, long eventId, UpdateUserEventDto dto) {
+    @Transactional
+    public EventFullDto privateUpdateEventById(long userId, long eventId, UpdateUserEventDto dto) {
         log.debug("Received request for private update event. Event id: {}", eventId);
         Event event = eventRepository.findByIdAndInitiatorId(eventId, userId)
                 .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND_EXC + eventId));
@@ -107,7 +108,7 @@ public class EventServiceBase implements EventService {
     }
 
     @Override
-    public List<ParticipationRequestDto> privateGetRequestsByEvent(long userId, long eventId) {
+    public List<ParticipationRequestDto> privateGetRequestsByEventId(long userId, long eventId) {
         log.debug("Received request for private get requests by event. Event id: {}", eventId);
         List<Participation> participations = participationRepository.findAllByEventId(eventId);
         List<ParticipationRequestDto> response = participationMapper.toParticipationRequestDtoList(participations);
@@ -116,7 +117,8 @@ public class EventServiceBase implements EventService {
     }
 
     @Override
-    public EventRequestStatusUpdateResult privateUpdateRequestsByEvent(long userId, long eventId, EventRequestStatusUpdateRequest dto) {
+    @Transactional
+    public EventRequestStatusUpdateResult privateUpdateRequestsByEventId(long userId, long eventId, EventRequestStatusUpdateRequest dto) {
         log.debug("Received request for private update requests by event. Event id: {}", eventId);
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND_EXC + eventId));
@@ -183,6 +185,7 @@ public class EventServiceBase implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto adminUpdateEvent(long eventId, UpdateAdminEventDto dto) {
         log.debug("Received request for admin update events id: {}", eventId);
         Event event = eventRepository.findById(eventId)
@@ -220,14 +223,14 @@ public class EventServiceBase implements EventService {
                 request.getRequestURI(),
                 request.getRemoteAddr(),
                 LocalDateTime.now()));
-        getStatistics(events);
+        getStatisticsForEvents(events);
         log.debug("Found published events. Size: {}", events.size());
         return mapper.toShortDtoList(events);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public EventFullDto publicGetEvent(long id, HttpServletRequest request) {
+    public EventFullDto publicGetEventById(long id, HttpServletRequest request) {
         log.debug("Received request for public get event. Event id: {}", id);
         BooleanExpression expression = QEvent.event.id.eq(id).and(QEvent.event.state.eq(State.PUBLISHED));
         Event event = eventRepository.findOne(expression)
@@ -301,7 +304,7 @@ public class EventServiceBase implements EventService {
         }
     }
 
-    private void getStatistics(List<Event> events) {
+    private void getStatisticsForEvents(List<Event> events) {
         String regExp = "/events/";
         List<String> uris = events.stream().map(Event::getId).map(id -> regExp + id).toList();
         LocalDateTime start = events.stream().map(Event::getPublishedOn)

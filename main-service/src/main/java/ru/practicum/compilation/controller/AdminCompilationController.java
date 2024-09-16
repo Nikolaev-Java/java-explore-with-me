@@ -31,7 +31,7 @@ public class AdminCompilationController {
     @DeleteMapping("/{compId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable final long compId) {
-        compilationService.delete(compId);
+        compilationService.deleteById(compId);
     }
 
     @PatchMapping("/{compId}")

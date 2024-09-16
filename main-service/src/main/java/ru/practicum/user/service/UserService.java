@@ -10,7 +10,7 @@ import java.util.List;
 public interface UserService {
     UserDto createUser(NewUserRequestDto requestDto);
 
-    void deleteUser(Long id);
+    void deleteUserById(Long id);
 
     List<UserDto> getAllUsersById(List<Long> ids, Pageable pageable);
 
@@ -18,5 +18,5 @@ public interface UserService {
 
     ParticipationRequestDto createParticipation(long userId, long eventId);
 
-    ParticipationRequestDto cancelParticipation(long userId, long requestId);
+    ParticipationRequestDto cancelParticipationById(long userId, long requestId);
 }
