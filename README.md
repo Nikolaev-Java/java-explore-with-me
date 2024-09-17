@@ -3,7 +3,7 @@
 ## Explore with me
 
 
-# **Дополнительная фича Комментарии**
+# **Дополнительная фича Комментарии PR - https://github.com/Nikolaev-Java/java-explore-with-me/pull/7 **
 ### **Entity**
 - text - текст комментария
 - owner - юзер создатель комментария
