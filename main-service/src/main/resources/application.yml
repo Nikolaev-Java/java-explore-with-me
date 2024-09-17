@@ -1,0 +1,46 @@
+stat-server:
+  url: http://localhost:9090
+server:
+  port: 8080
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+        format_sql: true
+  sql:
+    init:
+      mode: always
+---
+spring:
+  config:
+    activate:
+      on-profile: default
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:7432/main
+    username: main
+    password: main
+---
+logging:
+  level:
+    ru.practicum: debug
+spring:
+  config:
+    activate:
+      on-profile: ci,test
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  datasource:
+    url: jdbc:h2:mem:main;MODE=PostgreSQL
+    username: test
+    password: test
+  h2:
+    console:
+      enabled: true
+
