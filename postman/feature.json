@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "5acc1629-7db0-4f62-a5a5-59e90c4c1572",
-		"name": "FeaturingTest",
+		"name": "feature",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "32657457"
 	},
@@ -950,8 +950,8 @@
 									"        let event1 = await api.addEvent(user2.id, rnd.getEvent(category.id));\r",
 									"        event1 = await api.publishEvent(event1.id);\r",
 									"        const comm1 = await api.addComment(rnd.getComment(),user1.id,event1.id);\r",
-									"        pm.collectionVariables.set(\"comId\",comm1.id);\r",
-									"        pm.collectionVariables.set(\"text\",comm1.text);\r",
+									"        pm.collectionVariables.set(\"comId\", comm1.id);\r",
+									"        pm.collectionVariables.set(\"comments\",comm1);\r",
 									"    } catch(err) {\r",
 									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
 									"    }\r",
@@ -990,11 +990,10 @@
 									"pm.test(\"Данные должны соответствовать\", function(){\r",
 									"    var body = pm.response.json();\r",
 									"    pm.expect(body).to.have.property('text');\r",
-									"    var text = pm.collectionVariables.get(\"text\");\r",
-									"    pm.expect(body.text, '\"text\" must be ' + text).to.eql(text);\r",
+									"    var comment = pm.collectionVariables.get(\"comments\");\r",
+									"    pm.expect(body.text, '\"text\" must be ' + comment.text).to.eql(comment.text);\r",
 									"    pm.expect(body).to.have.property('id');\r",
-									"    var id = pm.collectionVariables.get(\"comId\");\r",
-									"    pm.expect(body.id, '\"id\" must be ' + id).to.eql(id);\r",
+									"    pm.expect(body.id, '\"id\" must be ' + comment.id).to.eql(comment.id);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -2068,6 +2067,11 @@
 		},
 		{
 			"key": "status",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "comments",
 			"value": "",
 			"type": "string"
 		}
