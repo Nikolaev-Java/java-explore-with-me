@@ -7,6 +7,9 @@ import org.mapstruct.factory.Mappers;
 import ru.practicum.category.Category;
 import ru.practicum.category.dto.CategoryDto;
 import ru.practicum.category.dto.CategoryMapper;
+import ru.practicum.comment.Comment;
+import ru.practicum.comment.dto.CommentMapper;
+import ru.practicum.comment.dto.CommentShortDto;
 import ru.practicum.event.Event;
 import ru.practicum.user.User;
 import ru.practicum.user.dto.UserMapper;
@@ -37,12 +40,19 @@ public interface EventMapper {
 
     List<EventFullDto> toEventFullDtoList(List<Event> events);
 
+    @Mapping(target = "eventDate", dateFormat = "yyyy-MM-dd HH:mm:ss", source = "eventDate")
+    EventCommentsShortDto toEventCommentsShortDto(Event event);
+
     default UserShortDto userToShortDto(User user) {
         return Mappers.getMapper(UserMapper.class).userToUserShortDto(user);
     }
 
     default CategoryDto categoryToCategoryDto(Category category) {
         return Mappers.getMapper(CategoryMapper.class).toCategoryDto(category);
+    }
+
+    default CommentShortDto toCommentShortDto(Comment comment) {
+        return Mappers.getMapper(CommentMapper.class).toCommentShortDto(comment);
     }
 
     @Named(value = "idToCategory")

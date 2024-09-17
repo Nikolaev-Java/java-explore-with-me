@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.ClientService;
+import ru.practicum.event.dto.EventCommentsShortDto;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.service.EventService;
@@ -37,7 +38,11 @@ public class PublicEventController {
 
     @GetMapping("/{id}")
     public EventFullDto getEvent(@PathVariable long id, HttpServletRequest request) {
-        EventFullDto eventFullDto = service.publicGetEventById(id, request);
-        return eventFullDto;
+        return service.publicGetEventById(id, request);
+    }
+
+    @GetMapping("/{id}/comments")
+    public EventCommentsShortDto getEventWithComments(@PathVariable long id) {
+        return service.publicGetEventByIdWithComments(id);
     }
 }

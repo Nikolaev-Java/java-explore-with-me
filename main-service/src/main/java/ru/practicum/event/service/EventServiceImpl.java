@@ -14,6 +14,11 @@ import ru.practicum.ClientService;
 import ru.practicum.RequestStatDto;
 import ru.practicum.ResponseStatDto;
 import ru.practicum.category.Category;
+import ru.practicum.comment.Comment;
+import ru.practicum.comment.CommentRepository;
+import ru.practicum.comment.StatusComment;
+import ru.practicum.comment.dto.CommentEventOwnerDto;
+import ru.practicum.comment.dto.CommentMapper;
 import ru.practicum.event.Event;
 import ru.practicum.event.EventRepository;
 import ru.practicum.event.Location;
@@ -21,6 +26,7 @@ import ru.practicum.event.LocationRepository;
 import ru.practicum.event.QEvent;
 import ru.practicum.event.State;
 import ru.practicum.event.dto.BasicUpdateEventDto;
+import ru.practicum.event.dto.EventCommentsShortDto;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventMapper;
 import ru.practicum.event.dto.EventRequestStatusUpdateRequest;
@@ -60,6 +66,8 @@ public class EventServiceImpl implements EventService {
     private final ParticipationMapper participationMapper;
     private final ClientService clientService;
     private final LocationRepository locationRepository;
+    private final CommentRepository commentRepository;
+    private final CommentMapper commentMapper;
 
     @Override
     public List<EventShortDto> privateGetAllUserEvents(long userId, PageRequest page) {
@@ -247,6 +255,46 @@ public class EventServiceImpl implements EventService {
             event.setViews(stats.getFirst().getHits());
         }
         return mapper.toEventFullDto(event);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public EventCommentsShortDto publicGetEventByIdWithComments(long id) {
+        log.debug("Received request for public get event with comment. Event id: {}", id);
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Event with id " + id + " not found"));
+        return mapper.toEventCommentsShortDto(event);
+    }
+
+    @Override
+    public CommentEventOwnerDto privateGetCommentByEvent(long eventId, long userId, long commentId) {
+        log.debug("Received request for private get comment by event. Event id: {}", eventId);
+        Comment comment = commentRepository.findByIdAndEventId(commentId, eventId)
+                .orElseThrow(() -> new NotFoundException("Comment with id " + commentId + " not found"));
+        return commentMapper.toCommentEventOwnerDto(comment);
+    }
+
+    @Override
+    public CommentEventOwnerDto privateUpdateCommentByEvent(long eventId, long userId, CommentEventOwnerDto dto, long commentId) {
+        log.debug("Received request for private update comment by event. Event id: {}", eventId);
+        Comment comment = commentRepository.findByIdAndEventId(commentId, eventId)
+                .orElseThrow(() -> new NotFoundException("Comment with id " + commentId + " not found"));
+        if (comment.getStatus().equals(StatusComment.PUBLISHED)) {
+            throw new ConflictException("Cannot update comment with status published.");
+        }
+        if (Objects.nonNull(dto.getStatus())) {
+            comment.setStatus(dto.getStatus());
+        }
+        comment.setCommentByOwnerEvent(dto.getComment());
+        commentRepository.save(comment);
+        return commentMapper.toCommentEventOwnerDto(comment);
+    }
+
+    @Override
+    public List<CommentEventOwnerDto> privateGetAllCommentByEvent(long eventId, long userId, PageRequest page) {
+        log.debug("Recived requset for privet get all comment by event id: {}", eventId);
+        List<Comment> comments = commentRepository.findAllByEventId(eventId, page);
+        return commentMapper.toCommentEventOwnerDtoList(comments);
     }
 
     private void updateEvent(BasicUpdateEventDto dto, Event event) {

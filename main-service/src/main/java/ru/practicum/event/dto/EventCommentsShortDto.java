@@ -1,12 +1,14 @@
 package ru.practicum.event.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import ru.practicum.comment.dto.CommentShortDto;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,11 +16,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @ToString
-public class UpdateAdminEventDto extends BasicUpdateEventDto {
-    @JsonProperty(value = "stateAction")
-    private StateActionAdmin stateAction;
-
-    public enum StateActionAdmin {
-        PUBLISH_EVENT, REJECT_EVENT
-    }
+public class EventCommentsShortDto extends EventShortDto {
+    private List<CommentShortDto> comments;
 }
