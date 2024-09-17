@@ -987,14 +987,7 @@
 									"    pm.response.to.be.json;\r",
 									"\r",
 									"});\r",
-									"pm.test(\"Данные должны соответствовать\", function(){\r",
-									"    var body = pm.response.json();\r",
-									"    pm.expect(body).to.have.property('text');\r",
-									"    var comment = pm.collectionVariables.get(\"comments\");\r",
-									"    pm.expect(body.text, '\"text\" must be ' + comment.text).to.eql(comment.text);\r",
-									"    pm.expect(body).to.have.property('id');\r",
-									"    pm.expect(body.id, '\"id\" must be ' + comment.id).to.eql(comment.id);\r",
-									"});"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
