@@ -17,9 +17,6 @@ public interface CommentMapper {
     @Mapping(target = "user", source = "owner.id")
     CommentShortDto toCommentShortDto(Comment comment);
 
-    @Mapping(target = "user", source = "owner.id")
-    List<CommentShortDto> toCommentShortDtoList(List<Comment> comments);
-
     @Mapping(target = "owner", source = "user", qualifiedByName = "toUser")
     Comment fromCommentShortDto(CommentShortDto commentDto);
 
@@ -34,11 +31,6 @@ public interface CommentMapper {
     @Mapping(target = "user", source = "owner.id")
     @Mapping(target = "comment", source = "commentByOwnerEvent")
     List<CommentEventOwnerDto> toCommentEventOwnerDtoList(List<Comment> comments);
-
-    @Named("toEvent")
-    default Event fromEventIdToEvent(Long eventId) {
-        return Event.builder().id(eventId).build();
-    }
 
     @Named("toUser")
     default User fromUserIdToUser(Long id) {

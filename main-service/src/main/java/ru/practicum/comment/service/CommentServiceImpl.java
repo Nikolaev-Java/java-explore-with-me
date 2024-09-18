@@ -28,6 +28,7 @@ public class CommentServiceImpl implements CommentService {
     private final EventRepository eventRepository;
 
     @Override
+    @Transactional
     public CommentFullDto createComment(Long userId, Long eventId, CommentShortDto commentDto) {
         log.debug("Received request for private create comment. User id: {}. Event id: {}", userId, eventId);
         Event event = eventRepository.findById(eventId)
@@ -36,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
             throw new ConflictException("You are not allowed to create a new comment");
         }
         if (!event.getState().equals(State.PUBLISHED)) {
-            throw new IllegalArgumentException("Event state is not published");
+            throw new ConflictException("Event state is not published");
         }
         Comment comment = commentMapper.fromCommentShortDto(commentDto);
         comment.setOwner(User.builder().id(userId).build());
@@ -79,11 +80,4 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.toCommentFullDto(comment);
     }
 
-//    @Override
-//    public CommentEventOwnerDto getCommentEditsById(Long userId, Long commentId) {
-//        log.debug("Received request for public get comment with edits. User id: {}. Comment id: {}", userId, commentId);
-//        Comment comment = commentRepository.findById(commentId)
-//                .orElseThrow(() -> new NotFoundException("Comment not found"));
-//        return commentMapper.toCommentEventOwnerDto(comment);
-//    }
 }
