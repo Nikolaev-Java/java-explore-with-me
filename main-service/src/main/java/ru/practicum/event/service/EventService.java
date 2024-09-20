@@ -3,6 +3,8 @@ package ru.practicum.event.service;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import ru.practicum.comment.dto.CommentEventOwnerDto;
+import ru.practicum.event.dto.EventCommentsShortDto;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.event.dto.EventRequestStatusUpdateResult;
@@ -36,4 +38,12 @@ public interface EventService {
     List<EventShortDto> publicGetAllEvents(PublicEventsFilters publicEventsFilters, PageRequest page, HttpServletRequest request);
 
     EventFullDto publicGetEventById(long id, HttpServletRequest request);
+
+    EventCommentsShortDto publicGetEventByIdWithComments(long id);
+
+    CommentEventOwnerDto privateGetCommentByEvent(long eventId, long userId, long commentId);
+
+    CommentEventOwnerDto privateUpdateCommentByEvent(long eventId, long userId, CommentEventOwnerDto dto, long commentId);
+
+    List<CommentEventOwnerDto> privateGetAllCommentByEvent(long eventId, long userId, PageRequest of);
 }

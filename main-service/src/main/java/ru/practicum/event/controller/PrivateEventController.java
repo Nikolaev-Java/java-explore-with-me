@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.comment.dto.CommentEventOwnerDto;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.event.dto.EventRequestStatusUpdateResult;
@@ -63,5 +64,28 @@ public class PrivateEventController {
     public EventRequestStatusUpdateResult updateRequestsByEvent(@PathVariable long userId, @PathVariable long eventId,
                                                                 @RequestBody EventRequestStatusUpdateRequest dto) {
         return service.privateUpdateRequestsByEventId(userId, eventId, dto);
+    }
+
+    @GetMapping("/{eventId}/comment/{commentId}")
+    public CommentEventOwnerDto getCommentsByEvent(@PathVariable long eventId,
+                                                   @PathVariable long userId,
+                                                   @PathVariable long commentId) {
+        return service.privateGetCommentByEvent(eventId, userId, commentId);
+    }
+
+    @GetMapping("/{eventId}/comment")
+    public List<CommentEventOwnerDto> getAllCommentsByEvent(@PathVariable long eventId,
+                                                            @PathVariable long userId,
+                                                            @RequestParam(defaultValue = "0") int from,
+                                                            @RequestParam(defaultValue = "10") int size) {
+        return service.privateGetAllCommentByEvent(eventId, userId, PageRequest.of(from, size));
+    }
+
+    @PatchMapping("/{eventId}/comment/{commentId}")
+    public CommentEventOwnerDto updateCommentByEvent(@PathVariable long eventId,
+                                                     @PathVariable long userId,
+                                                     @PathVariable long commentId,
+                                                     @Valid @RequestBody CommentEventOwnerDto dto) {
+        return service.privateUpdateCommentByEvent(eventId, userId, dto, commentId);
     }
 }

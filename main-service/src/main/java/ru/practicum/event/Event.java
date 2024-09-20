@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.category.Category;
+import ru.practicum.comment.Comment;
 import ru.practicum.participation.Participation;
 import ru.practicum.user.User;
 
@@ -83,4 +84,6 @@ public class Event {
     private int confirmedRequests = 0;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
     List<Participation> participations;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
+    private List<Comment> comments;
 }

@@ -1,10 +1,10 @@
 package ru.practicum.event.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import ru.practicum.category.dto.CategoryDto;
 import ru.practicum.user.dto.UserShortDto;
 
@@ -12,7 +12,7 @@ import ru.practicum.user.dto.UserShortDto;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 public class EventShortDto {
     private long id;
     private String annotation;
